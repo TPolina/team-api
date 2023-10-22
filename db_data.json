@@ -1,0 +1,172 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mobYNS2rXWeNvayTQAmvH2$crXJx+2rV7gp0xvFIjlAQe+mDcMUfTUCUUxQbhDoU2A=",
+      "last_login": "2023-10-22T22:15:30.447Z",
+      "is_superuser": true,
+      "username": "test.user",
+      "first_name": "",
+      "last_name": "",
+      "email": "user@example.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-10-22T22:15:09.448Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "teams.team",
+    "pk": 1,
+    "fields": {
+      "name": "Management"
+    }
+  },
+  {
+    "model": "teams.team",
+    "pk": 2,
+    "fields": {
+      "name": "Finance"
+    }
+  },
+  {
+    "model": "teams.team",
+    "pk": 3,
+    "fields": {
+      "name": "QA"
+    }
+  },
+  {
+    "model": "teams.team",
+    "pk": 4,
+    "fields": {
+      "name": "Marketing"
+    }
+  },
+  {
+    "model": "teams.team",
+    "pk": 5,
+    "fields": {
+      "name": "Freelance"
+    }
+  },
+  {
+    "model": "teams.team",
+    "pk": 6,
+    "fields": {
+      "name": "Support"
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 1,
+    "fields": {
+      "first_name": "Milani",
+      "last_name": "Walker",
+      "email": "mil@example.com",
+      "teams": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 2,
+    "fields": {
+      "first_name": "Jake",
+      "last_name": "Hopkins",
+      "email": "h.jake@example.com",
+      "teams": [
+        3
+      ]
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 3,
+    "fields": {
+      "first_name": "Luis",
+      "last_name": "Reed",
+      "email": "luis@example.com",
+      "teams": [
+        2,
+        4,
+        5
+      ]
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 4,
+    "fields": {
+      "first_name": "Oliver",
+      "last_name": "Fowler",
+      "email": "olvr@example.com",
+      "teams": []
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 5,
+    "fields": {
+      "first_name": "Juan",
+      "last_name": "Lee",
+      "email": "lee@example.com",
+      "teams": [
+        3
+      ]
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 6,
+    "fields": {
+      "first_name": "Kevin",
+      "last_name": "Williams",
+      "email": "kev@example.com",
+      "teams": [
+        3,
+        5
+      ]
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 7,
+    "fields": {
+      "first_name": "Robert",
+      "last_name": "Evans",
+      "email": "rob@example.com",
+      "teams": [
+        1,
+        2,
+        4
+      ]
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 8,
+    "fields": {
+      "first_name": "Eli",
+      "last_name": "Reed",
+      "email": "eli@example.com",
+      "teams": []
+    }
+  },
+  {
+    "model": "teams.person",
+    "pk": 9,
+    "fields": {
+      "first_name": "Nora",
+      "last_name": "White",
+      "email": "nora@example.com",
+      "teams": [
+        4
+      ]
+    }
+  }
+]

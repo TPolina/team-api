@@ -13,7 +13,7 @@ class Person(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField()
-    teams = models.ManyToManyField(Team, related_name="members")
+    teams = models.ManyToManyField(Team, related_name="members", blank=True)
 
     class Meta:
         verbose_name_plural = "people"
