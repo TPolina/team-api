@@ -1,3 +1,5 @@
+from typing import List
+
 from rest_framework import serializers
 
 from teams.models import Team, Person
@@ -33,3 +35,18 @@ class PersonListRetrieveSerializer(PersonSerializer):
 
 class AddMembersSerializer(serializers.Serializer):
     members_to_add = serializers.ListField(child=serializers.IntegerField())
+
+    @staticmethod
+    def validate_members_to_add(value: List[int]) -> List[int]:
+        """
+        Validate that the provided member PKs correspond to existing Person objects.
+        """
+        for member_pk in value:
+            try:
+                Person.objects.get(pk=member_pk)
+            except Person.DoesNotExist:
+                raise serializers.ValidationError(
+                    f"Invalid pk {member_pk} - object does not exist."
+                )
+
+        return value
