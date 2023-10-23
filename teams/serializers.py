@@ -16,11 +16,20 @@ class TeamListRetrieveSerializer(TeamSerializer):
         fields = TeamSerializer.Meta.fields + ("number_of_members",)
 
 
-class PersonSerializer(serializers.ModelSerializer):
+class BasePersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = ("id", "first_name", "last_name", "email", "teams")
+        fields = ("id", "first_name", "last_name", "email")
+
+
+class PersonSerializer(BasePersonSerializer):
+    class Meta(BasePersonSerializer.Meta):
+        fields = BasePersonSerializer.Meta.fields + ("teams",)
 
 
 class PersonListRetrieveSerializer(PersonSerializer):
     teams = TeamSerializer(many=True, read_only=True)
+
+
+class AddMembersSerializer(serializers.Serializer):
+    members_to_add = serializers.ListField(child=serializers.IntegerField())
