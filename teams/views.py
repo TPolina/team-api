@@ -9,6 +9,7 @@ from teams.serializers import (
     TeamSerializer,
     PersonSerializer,
     TeamListRetrieveSerializer,
+    PersonListRetrieveSerializer,
 )
 
 
@@ -31,6 +32,18 @@ class TeamViewSet(viewsets.ModelViewSet):
 
 
 class PersonViewSet(viewsets.ModelViewSet):
-    # Can be also done in get_queryset depending on action
-    queryset = Person.objects.prefetch_related("teams")
-    serializer_class = PersonSerializer
+    queryset = Person.objects.all()
+
+    def get_queryset(self) -> QuerySet:
+        queryset = self.queryset
+
+        if self.action in ("list", "retrieve"):
+            queryset = queryset.prefetch_related("teams")
+
+        return queryset
+
+    def get_serializer_class(self) -> Type[Serializer]:
+        if self.action in ("list", "retrieve"):
+            return PersonListRetrieveSerializer
+
+        return PersonSerializer
