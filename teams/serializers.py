@@ -13,3 +13,10 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ("id", "name")
+
+
+class TeamListRetrieveSerializer(TeamSerializer):
+    number_of_members = serializers.IntegerField(read_only=True)
+
+    class Meta(TeamSerializer.Meta):
+        fields = TeamSerializer.Meta.fields + ("number_of_members",)
