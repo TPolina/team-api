@@ -21,11 +21,17 @@ from teams.serializers import (
 
 
 class TeamViewSet(viewsets.ModelViewSet):
+    # It is possible to add permissions
+    # like IsAuthenticatedOrReadOnly or IsAdminOrReadOnly.
+    # In this case, there are no permissions, as we assume
+    # that this API will be used for internal company purposes
+    # and will be available to everyone
     queryset = Team.objects.all()
 
     def get_queryset(self) -> QuerySet:
         queryset = self.queryset
 
+        # We perform annotation here to decrease the number of SQL queries
         if self.action in ("list", "retrieve"):
             queryset = queryset.annotate(number_of_members=Count("members"))
 
@@ -91,6 +97,7 @@ class PersonViewSet(viewsets.ModelViewSet):
     def get_queryset(self) -> QuerySet:
         queryset = self.queryset
 
+        # Decrease the number of SQL queries
         if self.action in ("list", "retrieve"):
             queryset = queryset.prefetch_related("teams")
 
