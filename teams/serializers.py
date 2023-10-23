@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Type
 
+from django.db.models import Model
 from rest_framework import serializers
 
 from teams.models import Team, Person
@@ -33,20 +34,32 @@ class PersonListRetrieveSerializer(PersonSerializer):
     teams = TeamSerializer(many=True, read_only=True)
 
 
+def validate_pks(value: List[int], model_class: Type[Model]) -> List[int]:
+    """
+    Validate that the provided PKs correspond to existing objects of a given model.
+    """
+    for pk in value:
+        try:
+            model_class.objects.get(pk=pk)
+        except model_class.DoesNotExist:
+            raise serializers.ValidationError(
+                f"Invalid pk {pk} - object does not exist."
+            )
+
+    return value
+
+
 class AddMembersSerializer(serializers.Serializer):
     members_to_add = serializers.ListField(child=serializers.IntegerField())
 
     @staticmethod
     def validate_members_to_add(value: List[int]) -> List[int]:
-        """
-        Validate that the provided member PKs correspond to existing Person objects.
-        """
-        for member_pk in value:
-            try:
-                Person.objects.get(pk=member_pk)
-            except Person.DoesNotExist:
-                raise serializers.ValidationError(
-                    f"Invalid pk {member_pk} - object does not exist."
-                )
+        return validate_pks(value, Person)
 
-        return value
+
+class AddToTeamsSerializer(serializers.Serializer):
+    teams = serializers.ListField(child=serializers.IntegerField())
+
+    @staticmethod
+    def validate_teams(value: List[int]) -> List[int]:
+        return validate_pks(value, Team)

@@ -16,6 +16,7 @@ from teams.serializers import (
     PersonListRetrieveSerializer,
     AddMembersSerializer,
     BasePersonSerializer,
+    AddToTeamsSerializer,
 )
 
 
@@ -64,7 +65,7 @@ class TeamViewSet(viewsets.ModelViewSet):
         methods=["get"],
         detail=True,
         url_path="members/(?P<person_id>[^/.]+)",
-        url_name="team-specific_member",
+        url_name="team-specific-member",
     )
     def specific_member(
         self, request: Request, person_id: int, *args, **kwargs
@@ -99,4 +100,51 @@ class PersonViewSet(viewsets.ModelViewSet):
         if self.action in ("list", "retrieve"):
             return PersonListRetrieveSerializer
 
+        if self.action in ("teams", "specific_team"):
+            return TeamSerializer
+
+        if self.action == "add_to_teams":
+            return AddToTeamsSerializer
+
         return PersonSerializer
+
+    @action(methods=["get"], detail=True, url_path="teams", url_name="person-teams")
+    def teams(self, request: Request, *args, **kwargs) -> Response:
+        person = self.get_object()
+        teams = person.teams.all()
+        serializer = self.get_serializer(teams, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @teams.mapping.put
+    def add_to_teams(self, request: Request, *args, **kwargs) -> Response:
+        person = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            teams = serializer.validated_data["teams"]
+            person.teams.add(*teams)
+            person.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(
+        methods=["get"],
+        detail=True,
+        url_path="teams/(?P<team_id>[^/.]+)",
+        url_name="person-specific-team",
+    )
+    def specific_team(
+        self, request: Request, team_id: int, *args, **kwargs
+    ) -> Response:
+        person = self.get_object()
+        team = get_object_or_404(person.teams, pk=team_id)
+        serializer = self.get_serializer(team)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @specific_team.mapping.delete
+    def remove_from_specific_team(
+        self, request: Request, team_id: int, *args, **kwargs
+    ) -> Response:
+        person = self.get_object()
+        team = get_object_or_404(person.teams, pk=team_id)
+        person.teams.remove(team)
+        return Response(status=status.HTTP_200_OK)
